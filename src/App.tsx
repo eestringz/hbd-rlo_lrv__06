@@ -841,12 +841,6 @@ const CakeWrap = styled.div`
   gap: 8px;
 `;
 
-const CakeTitle = styled.div`
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  font-size: 16px;
-`;
-
 const CakeHint = styled.div`
   font-size: 12px;
   color: rgba(20, 20, 20, 0.62);
