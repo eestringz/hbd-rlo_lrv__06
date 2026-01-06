@@ -2,7 +2,7 @@
 import { useMemo, useRef, useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 
-type Photo = { src: string };
+type Photo = { src: string; caption: string };
 
 function confettiBurst(count = 120) {
   const colors = ["#ff6b6b", "#ffa8a8", "#ffd6a5", "#bde0fe", "#cdb4db"];
@@ -39,21 +39,36 @@ export default function App() {
   const SUBTITLE = "그녀의 25번째 생일을 축하하며!";
   const YT_EMBED_URL = "https://www.youtube.com/embed/5qap5aO4i9A";
 
-  const LETTER_TITLE = "세은에게";
+  const LETTER_TITLE = "TO. 세은";
   const LETTER = `생일 축하해 막내야!
 
-올해는 네가 원하는 일들 다 잘 풀리고,
-매일 건강하면 좋겠다 😀😆
+점심시간 투자해서 만들어봤다.
+항상 건강하고 행복하자 ~ 😎🤗
 
-PS. 고마우면 숙소 좀 알아봐라`;
+ps. 혹시 고마우면 숙소 좀 알아봐라`;
 
   // ✅ 캡션 제거: 사진만
   const base = import.meta.env.BASE_URL;
 
-  const photos: Photo[] = Array.from({ length: 14 }, (_, i) => ({
-    src: `${base}photos/${String(i + 1).padStart(2, "0")}.jpeg`,
-  }));
-
+  const photos: Photo[] = [
+    { src: `${base}photos/01.jpeg`, caption: "1년전 그녀의 생일" },
+    { src: `${base}photos/02.jpeg`, caption: "브이 1" },
+    { src: `${base}photos/03.jpeg`, caption: "브이 2" },
+    { src: `${base}photos/04.jpeg`, caption: "ㄹㅈㄷ 브이 귀신" },
+    { src: `${base}photos/05.jpeg`, caption: "이거 너무 베이비 페이스여요ㅋ" },
+    { src: `${base}photos/06.jpeg`, caption: "앞으로 브이 금지" },
+    { src: `${base}photos/07.jpeg`, caption: "그냥 현지가 웃겨서 넣음" },
+    { src: `${base}photos/08.jpeg`, caption: "나 그만 좋아해라 ~~~~" },
+    { src: `${base}photos/09.jpeg`, caption: "자체 컨텐츠녀" },
+    { src: `${base}photos/10.jpeg`, caption: "5개 정도 있는 단체사진 중 하나" },
+    { src: `${base}photos/11.jpeg`, caption: "귀여워라" },
+    // { src: `${base}photos/12.jpeg`, caption: "웃음 버튼 ㅋㅋ" },
+    { src: `${base}photos/13.jpeg`, caption: "브이 압수" },
+    {
+      src: `${base}photos/14.jpeg`,
+      caption: "너 생일파티만 기다리고 있어 🩵🤍",
+    },
+  ];
   const today = useMemo(() => {
     const d = new Date();
     const yyyy = d.getFullYear();
@@ -101,7 +116,7 @@ PS. 고마우면 숙소 좀 알아봐라`;
                     showToast("🎉 생일 축하해!");
                     scrollToId("photos");
                   }}>
-                  축하 폭죽
+                  클릭해보셔요
                 </PrimaryButton>
               </Actions>
 
@@ -112,11 +127,14 @@ PS. 고마우면 숙소 좀 알아봐라`;
               <SideTitle>🎉 축하~~~쏭! 🎈</SideTitle>
               <IframeWrap>
                 <iframe
-                  width="100%"
-                  height="190"
                   src={YT_EMBED_URL}
                   title="music"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  width="100%"
+                  height="190"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
                 />
               </IframeWrap>
               <SideHint>bgm 레츠고</SideHint>
@@ -129,14 +147,11 @@ PS. 고마우면 숙소 좀 알아봐라`;
         <Container>
           <PolaroidStack>
             {photos.map((p, i) => (
-              <Polaroid
-                key={i}
-                $r={i % 2 === 0 ? -1.2 : 1.2} // ✅ 모바일에서 치우침 방지: 회전 각도 최소
-                $t={i % 2 === 0 ? -1.5 : 1.5}>
+              <Polaroid key={i}>
                 <PolaroidFrame>
                   <PolaroidImg src={p.src} alt={`photo-${i}`} loading="lazy" />
                 </PolaroidFrame>
-                <PolaroidBlank />
+                <PolaroidCaption>{p.caption}</PolaroidCaption>
               </Polaroid>
             ))}
           </PolaroidStack>
@@ -147,7 +162,11 @@ PS. 고마우면 숙소 좀 알아봐라`;
         <Container>
           <FooterInner>
             <Actions>
-              <Button onClick={() => setIsLetterOpen(true)}>
+              <Button
+                onClick={() => {
+                  setIsLetterOpen(true);
+                  confettiBurst(150);
+                }}>
                 💌 내 마음 💌
               </Button>
             </Actions>
@@ -160,16 +179,6 @@ PS. 고마우면 숙소 좀 알아봐라`;
           <Modal onClick={(e) => e.stopPropagation()}>
             <ModalTitle>{LETTER_TITLE}</ModalTitle>
             <Letter>{LETTER}</Letter>
-            <ModalRow>
-              <PrimaryButton
-                onClick={() => {
-                  confettiBurst(150);
-                  showToast("🎉 생일 축하해!");
-                }}>
-                축하하기
-              </PrimaryButton>
-              <Button onClick={() => setIsLetterOpen(false)}>닫기</Button>
-            </ModalRow>
           </Modal>
         </Overlay>
       )}
@@ -183,7 +192,7 @@ PS. 고마우면 숙소 좀 알아봐라`;
 
 const GlobalStyle = createGlobalStyle`
   html, body {
-    margin: 0;
+    margin: 0 ;
     padding: 0;
     background: #fff;
     color: #141414;
@@ -193,10 +202,6 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-/**
- * ✅ 핵심: Section은 풀폭, Container는 항상 가운데 + 좌우 패딩 동일
- * - 모바일에서 "한쪽 붙음" 문제 대부분 여기서 해결됨
- */
 const Section = styled.section`
   width: 100%;
   display: flex;
@@ -206,19 +211,13 @@ const Section = styled.section`
 
 const Container = styled.div`
   width: 100%;
-  max-width: 720px;
-  padding-left: 16px;
-  padding-right: 16px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 720px; /* ✅ 여기 */
+  margin: 0 auto; /* ✅ 여기 */
+  padding: 0 16px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  @media (min-width: 640px) {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
 `;
 
 const TopLayout = styled.div`
@@ -227,15 +226,6 @@ const TopLayout = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 18px;
-
-  @media (min-width: 980px) {
-    display: grid;
-    grid-template-columns: 720px 280px;
-    justify-content: center;
-    justify-items: center;
-    align-items: start;
-    column-gap: 22px;
-  }
 `;
 
 const CenterBlock = styled.div`
@@ -261,7 +251,7 @@ const Dot = styled.span`
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background: linear-gradient(180deg, #ff8aa0, #ff5a72);
+  background: linear-gradient(180deg, #fec84b, #f79009);
 `;
 
 const H1 = styled.h1`
@@ -306,12 +296,12 @@ const Button = styled.button`
 `;
 
 const PrimaryButton = styled(Button)`
-  background: linear-gradient(180deg, #ff8aa0, #ff5a72);
+  background: linear-gradient(180deg, #f79009, #f79009);
   border-color: transparent;
   color: white;
 
   &:hover {
-    background: linear-gradient(180deg, #ff8aa0, #ff5a72);
+    background: linear-gradient(180deg, #f79009, #f79009);
     filter: brightness(0.98);
   }
 `;
@@ -327,12 +317,7 @@ const Divider = styled.div`
 const Side = styled.aside`
   width: 100%;
   max-width: 720px;
-
-  @media (min-width: 980px) {
-    max-width: 280px;
-    position: sticky;
-    top: 16px;
-  }
+  margin-top: 10px;
 `;
 
 const SideTitle = styled.div`
@@ -359,53 +344,44 @@ const SideHint = styled.div`
 
 const PolaroidStack = styled.div`
   width: 100%;
-  max-width: 720px; /* ✅ 컨테이너 중앙 + 동일 폭 */
+  max-width: 320px;
   margin-top: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 46px;
+  gap: 80px;
 `;
 
-const Polaroid = styled.div<{ $r: number; $t: number }>`
-  width: 100%; /* ✅ 항상 중앙/풀폭 */
-  max-width: 520px;
+const Polaroid = styled.div`
+  width: 100%;
+  max-width: 320px;
   margin: 0 auto;
   position: relative;
-  border-radius: 22px;
+  border-radius: 20px;
   background: #fff;
   border: 1px solid rgba(20, 20, 20, 0.08);
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
-  padding: 14px 14px 22px;
-  transform: rotate(${(p) => p.$r}deg);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.1);
+  padding: 12px 12px 14px;
   transition: transform 180ms ease, box-shadow 180ms ease;
 
   &:hover {
-    transform: rotate(${(p) => p.$r}deg) translateY(-2px);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.16);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.14);
   }
 
+  /* 테이프 (회전 없이 중앙 고정) */
   &::before {
     content: "";
     position: absolute;
     top: -10px;
     left: 50%;
-    transform: translateX(-50%) rotate(${(p) => p.$t}deg);
-    width: 120px;
-    height: 28px;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 26px;
     border-radius: 7px;
     background: rgba(245, 215, 160, 0.6);
     border: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
-  }
-
-  /* ✅ 모바일에서 “치우쳐 보임” 원천 봉쇄 */
-  @media (max-width: 480px) {
-    max-width: 100%;
-    transform: rotate(0deg);
-    &::before {
-      transform: translateX(-50%) rotate(0deg);
-    }
+    box-shadow: 0 7px 16px rgba(0, 0, 0, 0.08);
   }
 `;
 
@@ -421,12 +397,18 @@ const PolaroidImg = styled.img`
   width: 100%;
   height: auto;
   display: block;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
 `;
 
-const PolaroidBlank = styled.div`
-  height: 18px;
+const PolaroidCaption = styled.div`
+  margin-top: 10px;
+  padding: 6px 6px 0;
+  text-align: center;
+  font-weight: 800;
+  color: rgba(20, 20, 20, 0.72);
+  font-size: 14px;
+  line-height: 1.4;
 `;
 
 const FooterInner = styled.div`
@@ -450,15 +432,26 @@ const Overlay = styled.div`
   place-items: center;
   padding: 18px;
   z-index: 9998;
+
+  /* ✅ iOS/모바일에서 주소창/노치 때문에 잘리는거 방지 */
+  overflow: auto;
+
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
 `;
 
 const Modal = styled.div`
-  width: min(560px, 92vw);
+  width: min(360px, 80vw);
+  max-height: 85vh; /* ✅ 화면을 넘기지 않게 */
+  overflow: auto; /* ✅ 내용이 길면 모달 내부 스크롤 */
+  -webkit-overflow-scrolling: touch;
+
   background: white;
   border: 1px solid rgba(20, 20, 20, 0.14);
   border-radius: 20px;
   padding: 18px;
-  text-align: center;
+  // text-align: center;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18);
 `;
 
@@ -473,18 +466,14 @@ const Letter = styled.div`
   border-radius: 16px;
   padding: 14px;
   text-align: left;
+
   white-space: pre-wrap;
   line-height: 1.75;
   color: rgba(20, 20, 20, 0.78);
   background: rgba(255, 90, 114, 0.03);
-`;
 
-const ModalRow = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 12px;
-  flex-wrap: wrap;
+  overflow-wrap: anywhere; /* ✅ 긴 문자열/이모지/URL도 줄바꿈 */
+  word-break: break-word; /* ✅ 추가 안전장치 */
 `;
 
 const Toast = styled.div`
