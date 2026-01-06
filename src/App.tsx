@@ -37,7 +37,10 @@ function confettiBurst(count = 120) {
 export default function App() {
   const TITLE = `Happy BDAY!`;
   const SUBTITLE = "그녀의 25번째 생일을 축하하며!";
-  const YT_EMBED_URL = "https://www.youtube.com/embed/5qap5aO4i9A";
+  // const YT_EMBED_URL = "https://www.youtube.com/embed/5qap5aO4i9A";
+
+  const YT_EMBED_URL =
+    "https://www.youtube-nocookie.com/embed/TOVO7MhYEtU?playsinline=1&rel=0";
 
   const LETTER_TITLE = "TO. 세은";
   const LETTER = `생일 축하해 막내야!
@@ -128,9 +131,9 @@ ps. 혹시 고마우면 숙소 좀 알아봐라`;
               <IframeWrap>
                 <iframe
                   src={YT_EMBED_URL}
-                  title="music"
+                  title="youtube-shorts"
                   width="100%"
-                  height="190"
+                  height="520" // ✅ 쇼츠는 세로라 높이 크게
                   loading="lazy"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
