@@ -347,7 +347,7 @@ const SideHint = styled.div`
 
 const PolaroidStack = styled.div`
   width: 100%;
-  max-width: 320px;
+  max-width: 80wh;
   margin-top: 16px;
   display: flex;
   flex-direction: column;
@@ -356,8 +356,8 @@ const PolaroidStack = styled.div`
 `;
 
 const Polaroid = styled.div`
-  width: 100%;
-  max-width: 320px;
+  width: 85%;
+  max-width: 80wh;
   margin: 0 auto;
   position: relative;
   border-radius: 20px;
